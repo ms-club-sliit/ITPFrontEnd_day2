@@ -2,7 +2,6 @@
 node_modules
 /dist
 /src/components
-/src/assets
 /src/store
 /src/views
 
