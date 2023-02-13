@@ -2,6 +2,24 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
+    path: "/",
+    name: "home",
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "@/views/client/landing/LandingPage.vue"
+      ),
+    props: true,
+  },
+  {
+    path: "/shop",
+    name: "shop",
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ "@/views/client/landing/LandingPage.vue"
+      ),
+    props: true,
+  },
+  {
     path: "/admin",
     name: "admin",
     component: () =>
