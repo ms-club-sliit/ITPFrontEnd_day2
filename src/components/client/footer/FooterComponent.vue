@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid footerDiv">
     <p class="text-center">
       Copyright © 2023 - All Rights Reserved | Powered By SLIIT MSClub
     </p>
@@ -19,4 +19,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.footerDiv {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+</style>

@@ -17,8 +17,8 @@ export default {
   name: "LandingPage",
   components: {
     ContactUS,
-    HeaderComponent: HeaderComponent,
-    FooterComponent: FooterComponent,
+    HeaderComponent,
+    FooterComponent,
   },
 };
 </script>

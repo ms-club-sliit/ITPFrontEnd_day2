@@ -15,7 +15,7 @@ const routes = [
     name: "shop",
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "@/views/client/landing/LandingPage.vue"
+        /* webpackChunkName: "about" */ "@/views/client/shop/ShopPage.vue"
       ),
     props: true,
   },
