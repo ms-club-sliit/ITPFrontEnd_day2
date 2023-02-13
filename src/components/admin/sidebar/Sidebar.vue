@@ -2,38 +2,38 @@
   <div class="sidebar">
     <ul>
       <li>
-        <a href="/admin/">
+        <router-link to="/admin/">
           <span class="icon"><i class="fa fa-tachometer" /></span>
           <span class="title">Dashboard</span>
-        </a>
+        </router-link>
       </li>
       <li>
-        <a href="/admin/customers">
+        <router-link to="/admin/customers">
           <span class="icon"><i class="fa-solid fa-user-group" /></span>
           <span class="title">Customer</span>
-        </a>
+        </router-link>
       </li>
       <li>
-        <a href="/admin/items">
+        <router-link to="/admin/items">
           <span class="icon"
             ><i aria-hidden="true" class="fa fa-cutlery"
           /></span>
           <span class="title">Items</span>
-        </a>
+        </router-link>
       </li>
       <li>
-        <a href="/admin/orders">
+        <router-link to="/admin/orders">
           <span class="icon"
             ><i aria-hidden="true" class="fa fa-archive"
           /></span>
           <span class="title">Order</span>
-        </a>
+        </router-link>
       </li>
       <li>
-        <a href="/admin/reports">
+        <router-link to="/admin/reports">
           <span class="icon"><i aria-hidden="true" class="fa fa-book" /></span>
           <span class="title">Reports</span>
-        </a>
+        </router-link>
       </li>
     </ul>
   </div>

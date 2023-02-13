@@ -50,69 +50,42 @@
           </div>
           <div class="row mt-4">
             <div class="col">
-              <input
-                class="form-control"
-                placeholder="First Name"
-                type="text"
-              />
+              <input class="form-control" placeholder="Item Name" type="text" />
               <small
-                id="client_FirstName"
-                class="d-block text-danger form-text invalid-feedback"
-              ></small>
-            </div>
-            <div class="col">
-              <input class="form-control" placeholder="Last Name" type="text" />
-              <small
-                id="client_LastName"
-                class="d-block text-danger form-text invalid-feedback"
-              ></small>
-            </div>
-          </div>
-          <div class="row mt-4">
-            <div class="col">
-              <input
-                class="form-control"
-                placeholder="Mobile Number"
-                type="tel"
-              />
-              <small
-                id="client_Mobile"
+                id="itemName"
                 class="d-block text-danger form-text invalid-feedback"
               ></small>
             </div>
           </div>
           <div class="row mt-4">
             <div class="col-12">
-              <textarea class="form-control" placeholder="Address" />
+              <textarea class="form-control" placeholder="Description" />
               <small
-                id="client_Address"
+                id="itemDescription"
                 class="d-block text-danger form-text invalid-feedback"
               ></small>
             </div>
           </div>
           <div class="row mt-4">
-            <div class="col">
-              <select aria-label="role" class="form-select" name="gender">
-                <option disabled selected value="0">Gender</option>
-                <option value="1">Male</option>
-                <option value="2">Female</option>
-              </select>
-              <small
-                id="client_Gender"
-                class="d-block text-danger form-text invalid-feedback"
-              ></small>
+            <div class="col-12 d-flex">
+              <span
+                id="basic-addon1"
+                class="input-group-text bg-black d-inline text-black"
+                >RS:
+              </span>
+              <input
+                id="price"
+                class="form-control d-inline"
+                name="price"
+                placeholder="Price"
+                type="text"
+              />
             </div>
-            <div class="col">
-              <select aria-label="role" class="form-select" name="status">
-                <option disabled selected value="0">Status</option>
-                <option value="1">Online</option>
-                <option value="2">Offline</option>
-              </select>
-              <small
-                id="client_Status"
-                class="d-block text-danger form-text invalid-feedback"
-              ></small>
-            </div>
+            <small
+              class="d-block text-danger form-text invalid-feedback"
+              for="patientName"
+              name="charge"
+            ></small>
           </div>
           <div class="row mt-5">
             <div class="d-flex justify-content-around align-items-center">
@@ -152,18 +125,44 @@
           <table id="assignLabsTable" class="table table-striped custom-table">
             <thead>
               <tr>
-                <th scope="col">ID</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Profile Picture</th>
-                <th scope="col">Address</th>
+                <th scope="col">itemCode</th>
+                <th scope="col">Item Name</th>
+                <th scope="col">Item Image</th>
+                <th scope="col">Item description</th>
+                <th scope="col">Quantity</th>
                 <th scope="col">Mobile</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Status</th>
+                <th scope="col">Unit Price</th>
                 <th scope="col" />
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+              <tr v-for="item in itemList" :key="item.itemCode">
+                <td>{{ item.itemCode }}</td>
+                <td>{{ item.itemName }}</td>
+                <td>
+                  <img :src="item.itemImg" alt="profileImage" height="50" />
+                </td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.qtyOnHand }}</td>
+                <td>{{ item.unitPrice }}</td>
+                <td>
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <button class="btn btn-primary" type="button">
+                      <i class="fa-solid fa-pen text-black" />
+                    </button>
+                    <button
+                      class="btn btn-danger"
+                      type="button"
+                      @click="deleteItem(item)"
+                    >
+                      <i class="fa-solid fa-trash-can d-inline text-black" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
@@ -172,8 +171,37 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "ItemPage",
+  data() {
+    return {
+      itemList: [],
+    };
+  },
+  mounted() {
+    this.getAllItems();
+  },
+  watch() {
+    this.getAllItems();
+  },
+  methods: {
+    async getAllItems() {
+      await axios.get("http://localhost:3001/api/item").then((response) => {
+        this.itemList = response.data;
+      });
+    },
+
+    deleteItem(item) {
+      axios
+        .delete("http://localhost:3001/api/item/" + item._id)
+        .then((response) => {
+          console.log(response);
+          this.getAllItems();
+        });
+    },
+  },
 };
 </script>
 
