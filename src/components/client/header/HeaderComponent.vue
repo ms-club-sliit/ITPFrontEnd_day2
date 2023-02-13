@@ -34,10 +34,12 @@
               </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link fw-bold" href="#about">About</a>
+              <router-link class="nav-link fw-bold" to="/about"
+                >About</router-link
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link fw-bold" href="#contactUs">Contact Us </a>
+              <a class="nav-link fw-bold" href="/#contactUs">Contact Us </a>
             </li>
           </ul>
         </div>

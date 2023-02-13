@@ -1,8 +1,8 @@
 <template>
   <div>
     <HeaderComponent />
-    <main class="mainDiv mt-lg-2 mt-md-4 mt-sm-4">
-      <h1>Hello</h1>
+    <main class="mainDiv mt-lg-5 mt-md-4 mt-sm-4 mb-3">
+      <ContactUS />
     </main>
     <FooterComponent />
   </div>
@@ -11,10 +11,12 @@
 <script>
 import HeaderComponent from "@/components/client/header/HeaderComponent.vue";
 import FooterComponent from "@/components/client/footer/FooterComponent.vue";
+import ContactUS from "@/components/client/conatctus/ContactUS.vue";
 
 export default {
   name: "LandingPage",
   components: {
+    ContactUS,
     HeaderComponent: HeaderComponent,
     FooterComponent: FooterComponent,
   },
