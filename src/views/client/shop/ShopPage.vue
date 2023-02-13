@@ -1,11 +1,15 @@
 <template>
   <HeaderComponent />
   <main class="mainDiv mt-lg-5 mt-md-4 mt-sm-4 mb-3">
-    <div class="container">
-      <ItemCard />
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-4" v-for="item in items" :key="item.id">
+          <ItemCard />
+        </div>
+      </div>
     </div>
+    <FooterComponent />
   </main>
-  <FooterComponent />
 </template>
 
 <script>
@@ -17,7 +21,10 @@ export default {
   name: "ShopPage",
   data() {
     return {
-      logo: LogoImage,
+      items: [
+        { id: 1, message: "Foo" },
+        { id: 2, message: "Bar" },
+      ],
     };
   },
   components: {
