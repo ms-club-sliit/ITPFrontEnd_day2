@@ -38,19 +38,19 @@
               </div>
               <div id="imgInputDiv">
                 <div>
-                  <img
-                    id="ProfileImage"
-                    alt=""
-                    class="imgDiv"
-                    src="client_profilePicture"
-                  />
+                  <img id="ProfileImage" :src="itemImg" alt="" class="imgDiv" />
                 </div>
               </div>
             </div>
           </div>
           <div class="row mt-4">
             <div class="col">
-              <input class="form-control" placeholder="Item Name" type="text" />
+              <input
+                v-model="itemName"
+                class="form-control"
+                placeholder="Item Name"
+                type="text"
+              />
               <small
                 id="itemName"
                 class="d-block text-danger form-text invalid-feedback"
@@ -59,7 +59,11 @@
           </div>
           <div class="row mt-4">
             <div class="col-12">
-              <textarea class="form-control" placeholder="Description" />
+              <textarea
+                v-model="description"
+                class="form-control"
+                placeholder="Description"
+              />
               <small
                 id="itemDescription"
                 class="d-block text-danger form-text invalid-feedback"
@@ -75,6 +79,7 @@
               </span>
               <input
                 id="price"
+                v-model="unitPrice"
                 class="form-control d-inline"
                 name="price"
                 placeholder="Price"
@@ -90,8 +95,16 @@
           <div class="row mt-5">
             <div class="d-flex justify-content-around align-items-center">
               <button class="btn btnRegister" type="button">Register</button>
-              <button class="btn btnUpdate" type="button">Update</button>
-              <button class="btn btnDelete" type="button">Delete</button>
+              <button class="btn btnUpdate" type="button" @click="updateItem">
+                Update
+              </button>
+              <button
+                class="btn btnDelete"
+                type="button"
+                @click="deleteItemByItemCode"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </form>
@@ -106,9 +119,11 @@
             <div class="d-flex justify-content-center align-items-center">
               <input
                 id="searchID"
+                v-model="itemCode"
                 class="form-control col-8 me-5"
-                placeholder="ID"
+                placeholder="Item Code"
                 type="text"
+                @change="searchItemByCharacter"
               />
             </div>
             <div>
@@ -116,6 +131,7 @@
                 class="form-control btnSearch text-white"
                 type="button"
                 value="Search"
+                @click="searchItemByItemCode"
               />
             </div>
           </div>
@@ -149,7 +165,11 @@
                   <div
                     class="d-flex justify-content-between align-items-center"
                   >
-                    <button class="btn btn-primary" type="button">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      @click="editItem(item)"
+                    >
                       <i class="fa-solid fa-pen text-black" />
                     </button>
                     <button
@@ -172,23 +192,30 @@
 
 <script>
 import axios from "axios";
+import sweetalert from "sweetalert2";
 
 export default {
   name: "ItemPage",
   data() {
     return {
       itemList: [],
+      id: "",
+      itemCode: "",
+      itemName: "",
+      itemImg:
+        "https://icon-library.com/images/avatar-icon-images/avatar-icon-images-4.jpg",
+      description: "",
+      qtyOnHand: 0,
+      unitPrice: 0.0,
     };
   },
   mounted() {
     this.getAllItems();
   },
-  watch() {
-    this.getAllItems();
-  },
+
   methods: {
-    async getAllItems() {
-      await axios.get("http://localhost:3001/api/item").then((response) => {
+    getAllItems() {
+      axios.get("http://localhost:3001/api/item").then((response) => {
         this.itemList = response.data;
       });
     },
@@ -197,8 +224,78 @@ export default {
       axios
         .delete("http://localhost:3001/api/item/" + item._id)
         .then((response) => {
+          sweetalert.fire({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            title: response.data.message,
+            icon: "success",
+          });
+          this.getAllItems();
+        });
+    },
+
+    deleteItemByItemCode() {
+      axios
+        .delete("http://localhost:3001/api/item/delete/" + this.itemCode)
+        .then((response) => {
           console.log(response);
           this.getAllItems();
+        });
+    },
+
+    editItem(item) {
+      this.id = item._id;
+      this.itemCode = item.itemCode;
+      this.itemName = item.itemName;
+      this.itemImg = item.itemImg;
+      this.description = item.description;
+      this.qtyOnHand = item.qtyOnHand;
+      this.unitPrice = item.unitPrice;
+    },
+
+    updateItem() {
+      const updatedItem = {
+        itemCode: this.itemCode,
+        itemName: this.itemName,
+        itemImg: this.itemImg,
+        description: this.description,
+        qtyOnHand: this.qtyOnHand,
+        unitPrice: this.unitPrice,
+      };
+      axios
+        .put("http://localhost:3001/api/item/" + this.itemCode, updatedItem)
+        .then((response) => {
+          console.log(response.data.message);
+          sweetalert.fire({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            title: response.data.message,
+            icon: "success",
+          });
+          this.getAllItems();
+        });
+    },
+
+    searchItemByCharacter(event) {
+      axios
+        .get("http://localhost:3001/api/item/search/" + event.target.value)
+        .then((response) => {
+          console.log(response.data);
+          this.itemList = [];
+          this.itemList.push(response.data);
+        });
+    },
+    searchItemByItemCode() {
+      axios
+        .get("http://localhost:3001/api/item/search/" + this.itemCode)
+        .then((response) => {
+          console.log(response.data);
+          this.itemList = [];
+          this.itemList.push(response.data);
         });
     },
   },
