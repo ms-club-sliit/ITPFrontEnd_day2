@@ -71,7 +71,19 @@
             </div>
           </div>
           <div class="row mt-4">
-            <div class="col-12 d-flex">
+            <div class="col">
+              <input
+                v-model="qtyOnHand"
+                class="form-control"
+                placeholder="Item Quantity"
+                type="text"
+              />
+              <small
+                id="itemName"
+                class="d-block text-danger form-text invalid-feedback"
+              ></small>
+            </div>
+            <div class="col d-flex">
               <span
                 id="basic-addon1"
                 class="input-group-text bg-black d-inline text-black"
@@ -94,7 +106,9 @@
           </div>
           <div class="row mt-5">
             <div class="d-flex justify-content-around align-items-center">
-              <button class="btn btnRegister" type="button">Register</button>
+              <button class="btn btnRegister" type="button" @click="addItem">
+                Register
+              </button>
               <button class="btn btnUpdate" type="button" @click="updateItem">
                 Update
               </button>
@@ -214,6 +228,31 @@ export default {
   },
 
   methods: {
+    addItem() {
+      const updatedItem = {
+        itemCode: this.itemCode,
+        itemName: this.itemName,
+        itemImg: this.itemImg,
+        description: this.description,
+        qtyOnHand: this.qtyOnHand,
+        unitPrice: this.unitPrice,
+      };
+      axios
+        .put("http://localhost:3001/api/item/", updatedItem)
+        .then((response) => {
+          sweetalert.fire({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            title: response.data.message,
+            icon: "success",
+          });
+          this.clearTextFeilds();
+          this.getAllItems();
+        });
+    },
+
     getAllItems() {
       axios.get("http://localhost:3001/api/item").then((response) => {
         this.itemList = response.data;
@@ -232,6 +271,7 @@ export default {
             title: response.data.message,
             icon: "success",
           });
+          this.clearTextFeilds();
           this.getAllItems();
         });
     },
@@ -242,6 +282,7 @@ export default {
         .then((response) => {
           console.log(response);
           this.getAllItems();
+          this.clearTextFeilds();
         });
     },
 
@@ -277,6 +318,7 @@ export default {
             icon: "success",
           });
           this.getAllItems();
+          this.clearTextFeilds();
         });
     },
 
@@ -297,6 +339,16 @@ export default {
           this.itemList = [];
           this.itemList.push(response.data);
         });
+    },
+
+    clearTextFeilds() {
+      this.id = "";
+      this.itemCode = "";
+      this.itemName = "";
+      this.itemImg = "";
+      this.description = "";
+      this.qtyOnHand = "";
+      this.unitPrice = "";
     },
   },
 };
