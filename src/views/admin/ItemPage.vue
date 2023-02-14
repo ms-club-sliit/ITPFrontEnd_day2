@@ -21,10 +21,20 @@
             <div class="col d-flex justify-content-end align-items-center">
               <div class="col d-flex justify-content-end">
                 <div>
-                  <button id="btnAddImg" class="btn btnAddImg" type="button">
+                  <button
+                    id="btnAddImg"
+                    class="btn btnAddImg"
+                    type="button"
+                    @click="addImageToProfile"
+                  >
                     <i aria-hidden="true" class="fa fa-plus text-white" />
                   </button>
-                  <button id="btnEditImg" class="btn btnEditImg" type="button">
+                  <button
+                    id="btnEditImg"
+                    class="btn btnEditImg"
+                    type="button"
+                    @click="updateImageToProfile"
+                  >
                     <i class="fa-solid fa-pen text-white" />
                   </button>
                   <button
@@ -87,7 +97,8 @@
               <span
                 id="basic-addon1"
                 class="input-group-text bg-black d-inline text-black"
-                >RS:
+              >
+                RS:
               </span>
               <input
                 id="price"
@@ -224,21 +235,112 @@ export default {
     };
   },
   mounted() {
+    document.getElementById("btnEditImg").setAttribute("disabled", "true");
+    document.getElementById("btnImgDelete").setAttribute("disabled", "true");
     this.getAllItems();
   },
 
   methods: {
+    addImageToProfile() {
+      let imgDiv = document.getElementById("imgInputDiv");
+
+      let imgUploader = document.createElement("input");
+      imgUploader.setAttribute("id", "imgUploader");
+      imgUploader.setAttribute("type", "file");
+      imgUploader.setAttribute("accept", "image/png, image/gif, image/jpeg");
+      imgUploader.setAttribute("class", "d-none");
+      imgDiv.appendChild(imgUploader);
+
+      let imgUploaderElement = document.getElementById("imgUploader");
+
+      if (imgUploaderElement !== undefined && imgUploaderElement !== null) {
+        imgUploaderElement.click();
+        imgUploaderElement.addEventListener("change", () => {
+          imgUploaderElement = document.getElementById("imgUploader");
+          console.log(imgUploaderElement);
+          if (
+            imgUploaderElement.files[0] !== null &&
+            imgUploaderElement.files[0] !== undefined
+          ) {
+            if (imgUploaderElement.files.length > 0) {
+              const fileReader = new FileReader();
+
+              fileReader.onload = function (event) {
+                document.getElementById("ProfileImage").src =
+                  event.target.result;
+                document
+                  .getElementById("btnAddImg")
+                  .setAttribute("disabled", "true");
+              };
+
+              this.itemImg = document.getElementById("ProfileImage").src;
+
+              fileReader.readAsDataURL(imgUploaderElement.files[0]);
+            }
+          }
+        });
+      }
+
+      document.getElementById("btnEditImg").removeAttribute("disabled");
+      document.getElementById("btnImgDelete").removeAttribute("disabled");
+    },
+
+    updateImageToProfile() {
+      document.getElementById("ProfileImage").removeAttribute("src");
+      document.getElementById("btnAddImg").setAttribute("disabled", "true");
+
+      let imgDiv = document.getElementById("imgInputDiv");
+
+      let imgUploader = document.createElement("input");
+      imgUploader.setAttribute("id", "imgUploader");
+      imgUploader.setAttribute("type", "file");
+      imgUploader.setAttribute("accept", "image/png, image/gif, image/jpeg");
+      imgUploader.setAttribute("class", "d-none");
+      imgDiv.appendChild(imgUploader);
+
+      let imgUploaderElement = document.getElementById("imgUploader");
+
+      if (imgUploaderElement !== undefined && imgUploaderElement !== null) {
+        imgUploaderElement.click();
+        imgUploaderElement.addEventListener("change", () => {
+          imgUploaderElement = document.getElementById("imgUploader");
+          console.log(imgUploaderElement);
+          if (
+            imgUploaderElement.files[0] !== null &&
+            imgUploaderElement.files[0] !== undefined
+          ) {
+            if (imgUploaderElement.files.length > 0) {
+              const fileReader = new FileReader();
+
+              fileReader.onload = function (event) {
+                console.log(event.target.result);
+                document.getElementById("ProfileImage").src =
+                  event.target.result;
+                document
+                  .getElementById("btnAddImg")
+                  .setAttribute("disabled", "true");
+              };
+
+              this.itemImg = document.getElementById("ProfileImage").src;
+
+              fileReader.readAsDataURL(imgUploaderElement.files[0]);
+            }
+          }
+        });
+      }
+    },
+
     addItem() {
       const updatedItem = {
         itemCode: this.itemCode,
         itemName: this.itemName,
         itemImg: this.itemImg,
         description: this.description,
-        qtyOnHand: this.qtyOnHand,
-        unitPrice: this.unitPrice,
+        qtyOnHand: parseInt(this.qtyOnHand),
+        unitPrice: parseInt(this.unitPrice),
       };
       axios
-        .put("http://localhost:3001/api/item/", updatedItem)
+        .post("http://localhost:3001/api/item/", updatedItem)
         .then((response) => {
           sweetalert.fire({
             toast: true,
